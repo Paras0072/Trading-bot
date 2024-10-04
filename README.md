@@ -76,8 +76,10 @@ npm install
 ## Run the app
 nodemon
 
-## Open http://localhost:2000 in your browser
-open http://localhost:2000
+**Don't forget to start API server**
+
+## Open http://localhost:3000 in your browser
+open http://localhost:3000
 <!-- end:code block -->
 
 ## Configuration:
