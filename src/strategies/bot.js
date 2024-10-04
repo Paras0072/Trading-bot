@@ -175,7 +175,7 @@ const calculateBollingerBands = (prices) => {
 
   return { average, upperBand, lowerBand };
 };
-
+// bollingerband Trading Strategy
 const bollingerBandsTradingStrategy = (currentPrice, prices) => {
   const { average, upperBand, lowerBand } = calculateBollingerBands(prices);
 

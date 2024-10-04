@@ -4,14 +4,16 @@
 
 const express = require("express");
 const axios = require("axios"); // For making HTTP requests
-
+const logger = require("./src/utils/logger");
 const {
-
+  movingAverageCrossover,
+  momentumTradingStrategy,
   basicTradingLogic,
-  
+  bollingerBandsTradingStrategy,
 } = require("./src/strategies/bot"); // Import strategies
+const { generateReport } = require("./src/utils/profitTracker"); // Import profit tracker
 const app = express();
-const PORT = 2000;
+const PORT = 3000;
 
 let symbol = "AAPL"; // Stock symbol to monitor
 let tradingInterval = null; // Store interval ID for stopping the bot
@@ -23,7 +25,7 @@ const fetchStockPrice = async (symbol) => {
     const response = await axios.get(`${mockApiUrl}/${symbol}`);
     return response.data;
   } catch (error) {
-   
+    logger.error("Error fetching stock price:", error.message);
     return null; // Handle error gracefully
   }
 };
@@ -37,17 +39,19 @@ const tradingLogic = async () => {
 
     const currentPrice = parseFloat(stockData.price);
     console.log(`Stock price of ${symbol}: $${currentPrice.toFixed(2)}`);
-   
+    logger.info(`Current price: $${currentPrice.toFixed(2)}`);
 
     // Maintain a history of prices for Bollinger Bands calculation
     pricesHistory.push(currentPrice);
     if (pricesHistory.length > 20) pricesHistory.shift(); // Keep only the last 20 prices
 
     // Call trading strategies
-    
+    momentumTradingStrategy(currentPrice);
+    bollingerBandsTradingStrategy(currentPrice, pricesHistory); // Call the Bollinger Bands strategy
+    movingAverageCrossover(currentPrice);
     basicTradingLogic(currentPrice); // Call basic trading logic
   } catch (error) {
-   
+    logger.error(`Trading logic error: ${error.message}`);
     // Optionally: implement a retry mechanism or alert admin
   }
 };
@@ -73,6 +77,11 @@ app.get("/stop", (req, res) => {
   res.send("Trading bot stopped.");
 });
 
+// Endpoint to generate trade summary report
+app.get("/report", (req, res) => {
+  generateReport(); // Call function to generate report
+  res.send("Trade summary report generated. Check console for details.");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
