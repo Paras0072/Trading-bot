@@ -135,3 +135,50 @@ const momentumTradingStrategy = (currentPrice) => {
 
   lastPrice = currentPrice; // Update last price
 };
+const calculateBollingerBands = (prices) => {
+  const average = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const squaredDiffs = prices.map((price) => Math.pow(price - average, 2));
+  const variance = squaredDiffs.reduce((a, b) => a + b, 0) / prices.length;
+  const stdDev = Math.sqrt(variance);
+
+  const upperBand = average + stdDev * 2; // Adjust the multiplier as needed
+  const lowerBand = average - stdDev * 2;
+
+  return { average, upperBand, lowerBand };
+};
+
+const bollingerBandsTradingStrategy = (currentPrice, prices) => {
+  const { average, upperBand, lowerBand } = calculateBollingerBands(prices);
+
+  // Ensure valid Bollinger Bands are calculated
+  if (!average || !upperBand || !lowerBand) {
+    logger.warn("Bollinger Bands not calculated, insufficient data.");
+    return;
+  }
+
+  // Define trading conditions
+  if (currentPrice < lowerBand && positions === 0) {
+    // Buy condition: Price is below the lower band
+    const quantityToBuy = Math.floor(balance / currentPrice); // Buy as many shares as possible
+    if (quantityToBuy > 0) {
+      balance -= quantityToBuy * currentPrice; // Deduct from balance
+      positions += quantityToBuy; // Increase positions
+      recordTrade("buy", currentPrice, quantityToBuy); // Record the trade
+      logger.info(
+        `Bought ${quantityToBuy} shares at $${currentPrice.toFixed(
+          2
+        )} (Bollinger Bands Strategy)`
+      );
+    }
+  } else if (currentPrice > upperBand && positions > 0) {
+    // Sell condition: Price is above the upper band
+    balance += positions * currentPrice; // Add to balance
+    logger.info(
+      `Sold ${positions} shares at $${currentPrice.toFixed(
+        2
+      )} (Bollinger Bands Strategy)`
+    );
+    recordTrade("sell", currentPrice, positions); // Record the trade
+    positions = 0; // Reset positions
+  }
+};
