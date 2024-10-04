@@ -152,7 +152,7 @@ const bollingerBandsTradingStrategy = (currentPrice, prices) => {
 
   // Ensure valid Bollinger Bands are calculated
   if (!average || !upperBand || !lowerBand) {
-    logger.warn("Bollinger Bands not calculated, insufficient data.");
+    
     return;
   }
 
@@ -163,22 +163,20 @@ const bollingerBandsTradingStrategy = (currentPrice, prices) => {
     if (quantityToBuy > 0) {
       balance -= quantityToBuy * currentPrice; // Deduct from balance
       positions += quantityToBuy; // Increase positions
-      recordTrade("buy", currentPrice, quantityToBuy); // Record the trade
-      logger.info(
-        `Bought ${quantityToBuy} shares at $${currentPrice.toFixed(
-          2
-        )} (Bollinger Bands Strategy)`
-      );
+      
     }
   } else if (currentPrice > upperBand && positions > 0) {
     // Sell condition: Price is above the upper band
     balance += positions * currentPrice; // Add to balance
-    logger.info(
-      `Sold ${positions} shares at $${currentPrice.toFixed(
-        2
-      )} (Bollinger Bands Strategy)`
-    );
-    recordTrade("sell", currentPrice, positions); // Record the trade
+    
+   
     positions = 0; // Reset positions
   }
+};
+// Export trading strategies
+module.exports = {
+  movingAverageCrossover,
+  momentumTradingStrategy,
+  basicTradingLogic,
+  bollingerBandsTradingStrategy,
 };
