@@ -80,6 +80,11 @@ nodemon
 
 ## Open http://localhost:3000 in your browser
 open http://localhost:3000
+
+## Routes 
+1. http://localhost:3000/start : For starting monitoring of stock
+2. http://localhost:3000/stop  : For stopping monitoring of stock
+3. http://localhost:3000/report : For getting report containing all data including Win Ratio , Profit/Loss , Remaining balance and many more.......
 <!-- end:code block -->
 
 ## Configuration:
