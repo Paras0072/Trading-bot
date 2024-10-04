@@ -3,6 +3,9 @@ const movingAverage = (data, period) => {
   const sum = data.slice(-period).reduce((acc, price) => acc + price, 0);
   return sum / period;
 };
+const momentumTrading = (currentPrice, previousPrice) => {
+  return currentPrice > previousPrice;
+};
 
 // Basic Trading Logic: Buy on 2% drop, Sell on 3% rise
 const basicTradingLogic = (currentPrice) => {
@@ -95,3 +98,40 @@ const basicTradingLogic = (currentPrice) => {
      }
    }
  };
+ // Momentum Trading Strategy
+const momentumTradingStrategy = (currentPrice) => {
+  if (lastPrice === null) {
+    lastPrice = currentPrice; // Initialize last price
+    return;
+  }
+
+  if (momentumTrading(currentPrice, lastPrice) && positions === 0) {
+    // Buy if momentum is positive and there are no positions
+    positions = Math.floor(balance / currentPrice);
+    if (positions > 0) {
+      balance -= positions * currentPrice; // Deduct the cost of the shares bought
+      lastPrice = currentPrice;
+      recordTrade("buy", currentPrice, positions); // Record trade
+      console.log(
+        `Bought ${positions} shares (momentum) at $${currentPrice.toFixed(2)}`
+      );
+      
+    } else {
+      console.log(
+        `Insufficient balance to buy shares at $${currentPrice.toFixed(2)}`
+      );
+      
+    }
+  } else if (!momentumTrading(currentPrice, lastPrice) && positions > 0) {
+    // Sell if momentum is negative and there are positions
+    balance += positions * currentPrice; // Add the proceeds from selling
+   
+    console.log(
+      `Sold ${positions} shares (momentum) at $${currentPrice.toFixed(2)}`
+    );
+   
+    positions = 0; // Reset position
+  }
+
+  lastPrice = currentPrice; // Update last price
+};
