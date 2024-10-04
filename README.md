@@ -37,23 +37,23 @@ This backend application simulates a basic trading bot for a hypothetical stock 
 ## Trading Logic
 
 ### Moving Average Crossover Strategy:
-    - **Buy**: When the short-term moving average crosses above the long-term moving average.
-    - **Sell**: When the short-term moving average crosses below the long-term moving average.
-    - This strategy aims to capture trends by buying during upward momentum and selling during downward momentum.
+      -  Buy: When the short-term moving average crosses above the long-term moving average.
+      -  Sell: When the short-term moving average crosses below the long-term moving average.
+      -  This strategy aims to capture trends by buying during upward momentum and selling during downward momentum.
 
 ### Momentum Trading Strategy: 
-    - **Buy**:When the current price is higher than the previous price (positive momentum).
-    - **Sell**:When the current price is lower than the previous price (negative momentum).
-    - This strategy relies on price movement direction to make trading decisions.
+     -  Buy:When the current price is higher than the previous price (positive momentum).
+     -  Sell:When the current price is lower than the previous price (negative momentum).
+     -  This strategy relies on price movement direction to make trading decisions.
 
 ### Basic Trading Logic: 
-    - **Buy**: When the stock price drops by 2% from the last price.
-    - **Sell**: When the stock price rises by 3% from the last price.
-    - This strategy is based on predefined percentage thresholds for buying and selling.
+     -  Buy: When the stock price drops by 2% from the last price.
+     -  Sell: When the stock price rises by 3% from the last price.
+     -  This strategy is based on predefined percentage thresholds for buying and selling.
     
 ### Bollinger Bands Strategy:
-    - **Buy**: When the price is below the lower Bollinger Band (indicating a potential undervalued price).
-    - **Sell**: When the price is above the upper Bollinger Band (indicating a potential overvalued price).
+     -  Buy: When the price is below the lower Bollinger Band (indicating a potential undervalued price).
+     -  Sell: When the price is above the upper Bollinger Band (indicating a potential overvalued price).
 
 # How to Run the Application
 
